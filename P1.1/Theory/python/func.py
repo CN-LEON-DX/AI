@@ -14,3 +14,5 @@ print(math.sqrt(n1))
 # 2.0
 # 3.1622776601683795
 
+# soft max func
+                       

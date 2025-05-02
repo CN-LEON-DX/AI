@@ -1,0 +1,5 @@
+- Introduction about activation function in neural network
+- Introduce the definition, application, advantages and disadvantages of 8 basic activation function 
+- Implemented 8 activation function
+- Basic Operation in Python
+- Documentation in the doc folder
