@@ -1,0 +1,12 @@
+1. Dying relu là gì ?
+Là khi relu luôn có input vào là 0 -> output luôn là 0
+-> Không điều chỉnh được trọng số -> Dying 
+
+2. Vanishing gradient là gì ?
+Hiện tượng này xảy ra khi gradient hay là độ dốc của hàm loss
+và so với các trọng số đầu vào trở nên sát nhau mà chênh lệch cực
+kỳ nhỏ -> học rất chậm hoặc dừng -> tiêu biến(vanishing)
+
+Cách khắc phục sử dụng Swish
+Dùng Optimizer thích ứng (Adam, RMSprop)
+(tham khảo ;) 

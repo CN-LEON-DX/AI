@@ -1,0 +1,86 @@
+1. Đoạn code dưới đây đang thực hiện activation function nào?
+1 beta = 1.0
+2 x = -4
+3 y = x * (1 / (1 + math . e **( - beta * x ) ))
+4 print ( y )
+
+5 >> -0.07194483984836625
+(A). ReLU (B). Sigmoid
+(C). PReLU (D). Swish
+-----
+2. Đoạn code dưới đây đang thực hiện activation function nào?
+1 alpha = 0.1
+2 x = -4
+3 if x <=0:
+4 y = x * alpha *( x <=0)
+5 else :
+6 y = x
+7 print ( y )
+8 >> -0.4
+(A). Swish (B). Sigmoid
+(C). PReLU (D). ReLU
+
+---- 
+3. Đoạn code dưới đây đang thực hiện activation function nào?
+1 import math
+2
+3 x = 2
+4 y = math . log (1 + math . exp ( x ) )
+5 print ( y )
+6 >> 2.1269280110429727
+(A). Softplus (B). Sigmoid
+(C). PReLU (D). Swish
+---
+4. Đoạn code dưới đây đang thực hiện activation function nào?
+1 import math
+2
+3 x = 2
+4 y = 2/(1 + math . exp ( -2* x) ) - 1
+5 print ( y )
+6 >> 0.9640275800758169
+(A). ReLU (B). Sigmoid
+(C). PReLU (D). Tanh (2/(1 + e^(-2 * x)) - 1)
+
+-----------
+6. Đoạn code dưới đây đang thực hiện activation function nào?
+1 x = -2.0
+2 if x <=0:
+3 y = 0.0
+4 else :
+5 y = x
+6 print ( y )
+7 >> 0.0
+(A). Swish (B). LeakyReLU
+(C). ReLU (D). Tanh
+7. Đoạn code dưới đây đang thực hiện activation function nào?
+1 x = -1.2
+2 if x <=0:
+3 y = x *0.01
+4 else :
+5 y = x
+6 print ( y )
+7 >> -0.012
+(A). Sigmoid (B). LeakyReLU
+(C). ReLU (D). ELU
+8. Đoạn code dưới đây đang thực hiện activation function nào?
+1 import math
+2
+3 alpha = 0.1
+4 x = -4
+5 if x <=0:
+6 y = alpha *( math . e ** x -1)
+7 else :
+8 y = x
+9 >> -0.09816843611112658
+(A). Sigmoid (B). Tanh
+(C). ReLU (D). ELU
+
+
+1. A
+2. C
+3. A
+4. D
+5. B
+6. C
+7. B
+8. D
