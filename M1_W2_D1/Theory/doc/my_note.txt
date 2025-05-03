@@ -1,0 +1,7 @@
+Binary log intropy:
+
+L(y, y_hat) = -y*log(y_hat) - (1 - y)*log(1-y_hat)
+
+y_hat is the probability of input
+y is the actual output
+ 
