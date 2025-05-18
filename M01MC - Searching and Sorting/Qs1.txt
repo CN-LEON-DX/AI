@@ -1,0 +1,311 @@
+Câu hỏi 1:(Code) Hoàn thành chương trình sau với mô tả bài toán từ câu I.1. Đầu ra của chương trình
+dưới đây là gì?
+    1 def max_kernel ( num_list , k ) :
+    2 result = []
+    3
+    4 # Your Code Here
+    5
+    6 # End Code Here
+    7
+    8 return result
+    9
+    10 assert max_kernel ([3 , 4 , 5 , 1 , -44] , 3) == [5 , 5 , 5]
+    11 num_list = [3 , 4 , 5 , 1 , -44 , 5 ,10 , 12 ,33 , 1]
+    12 k = 3
+    13 print ( max_kernel ( num_list , k ) )
+a) [5, 5, 5, 5, 10, 12, 33, 33]
+b) [2, 5, 3, 4, 1, 10, 3, 3]
+c) [0, 9, 5, 1, 0, 12, 3, 33]
+d) Raise an Error
+
+Câu hỏi 2:(Code) Hoàn thành chương trình sau với mô tả bài toán từ câu I.2. Đầu ra của chương trình
+dưới đây là gì?
+    1 def character_count ( word ) :
+    2 character_statistic = {}
+    3
+    4 # Your Code Here
+    5
+    6 # End Code Here
+    7 return character_statistic
+    8
+    9 assert character_count (" Baby ") == {’B’: 1 , ’a’: 1 , ’b’: 1 , ’y’: 1}
+    10 print ( character_count (’smiles ’) )
+a) ’s’: 2, ’m’: 1, ’i’: 1, ’l’: 1, ’e’: 1
+b) ’s’: 0, ’m’: 1, ’i’: 1, ’l’: 1, ’e’: 8
+c) ’s’: 4, ’m’: 1, ’i’: 2, ’l’: 1, ’e’: 1
+d) Raise a Error
+
+Câu hỏi 3:(Code) Hoàn thành chương trình sau với mô tả bài toán từ câu I.3. Đầu ra của chương trình
+dưới đây là gì?
+    1 ! gdown https :// drive . google . com / uc ?id =1 IBScGdW2xlNsc9v5zSAya548kNgiOrko
+    2
+    3 def count_word ( file_path ) :
+    4 counter = {}
+    5
+    6 # Your Code Here
+    7
+    8 # End Code Here
+    9
+    10 return counter
+    11 file_path = ’/ content / P1_data . txt ’
+    12 result = count_word ( file_path )
+    13 assert result [’who ’] == 3
+    14 print ( result [’man ’])
+a) 4
+b) 5
+c) 6
+d) 9
+
+Câu hỏi 4:(Code) Hoàn thành chương trình sau với mô tả bài toán từ câu I.4. Đầu ra của chương trình
+dưới đây là gì?
+    1 def levenshtein_distance ( token1 , token2 ) :
+    2 # Your Code Here
+    3
+    4 # End Code Here
+    5
+    6 return distance
+    7
+    8 assert levenshtein_distance ("hi", " hello ") == 4.0
+    9 print ( levenshtein_distance (" hola ", " hello ") )
+a) 1.0
+b) 2.0
+c) 3.0
+d) 4.0
+
+
+Câu hỏi 5:(Code) Hoàn thành chương trình sau. Đầu ra của chương trình dưới đây là gì?
+    1 def check_the_number ( N ) :
+    2 list_of_numbers = []
+    3 result = ""
+    4 for i in range (1 , 5) :
+    5 # Your code here
+    6 #Su dung append them i vao trong list_of_number
+    7 if N in list_of_numbers :
+    8 results = " True "
+    9 if N not in list_of_numbers :
+    10 results = " False "
+    11 return results
+    12
+    13 N = 7
+    14 assert check_the_number ( N ) == " False "
+    15
+
+    7
+
+    AI VIETNAM aivietnam.edu.vn
+
+    16 N = 2
+    17 results = check_the_number ( N )
+    18 print ( results )
+a) True ==
+b) False
+c) None
+d) Raise an Error
+
+
+Câu hỏi 6:(Code) Hãy hoàn thành chương trình dưới đây. Đầu ra của chương trình là gì?
+    1 def my_function ( data , max , min) :
+    2 result = []
+    3 for i in data :
+    4 # Your code here
+    5 # Neu i < min thi them min vao result
+    6 elif i > max :
+    7 result . append ( max )
+    8 else :
+    9 result . append ( i )
+    10 return result
+    11 my_list = [5 , 2 , 5 , 0 , 1]
+    12 max = 1
+    13 min = 0
+    14 assert my_function (max = max , min = min , data = my_list ) == [1 , 1 , 1 , 0 , 1]
+    15 my_list = [10 , 2 , 5 , 0 , 1]
+    16 max = 2
+    17 min = 1
+    18 print ( my_function ( max = max , min = min , data = my_list ) )
+
+a) [10, 2, 5, 1, 1]
+b) [0, 2, 2, 0, 0]
+c) [2, 2, 2, 1, 1] ==
+d) Raise an Error
+
+
+Câu hỏi 7:(code) Hãy hoàn thành chương trình dưới đây. Đầu ra của chương trình là gì?
+    1 def my_function (x , y ) :
+    2 # Your code here
+    3 #Su dung extend de noi y vao x
+    4 # return x
+    5
+    6 list_num1 = [’a’, 2 , 5]
+    7 list_num2 = [1 , 1]
+    8 list_num3 = [0 , 0]
+    9
+    10 assert my_function ( list_num1 , my_function ( list_num2 , list_num3 ) ) == [’a’, 2 , 5 , 1 , 1 ,
+    0 , 0]
+    11
+    12 list_num1 = [1 , 2]
+    13 list_num2 = [3 , 4]
+    14 list_num3 = [0 , 0]
+    15
+    16 print ( my_function ( list_num1 , my_function ( list_num2 , list_num3 ) ) )
+
+a) [1, 2, 3, 4, 0, 0] ==
+b) [1, 2, [3, 4, 0, 0]]
+c) [[1, 2, 3, 4, 0, 0]]
+d) Raise an Error
+
+
+Câu hỏi 8:(code) Hãy hoàn thành chương trình tìm phần tử có giá trị nhỏ nhất trong một list dưới
+đây. Đầu ra của chương trình là gì?
+    1 def my_function ( n ) :
+    2 # Your code here
+    3
+    4 my_list = [1 , 22 , 93 , -100]
+    5 assert my_function ( my_list ) == -100
+    6
+    7 my_list = [1 , 2 , 3 , -1]
+    8 print ( my_function ( my_list ) )
+a) None
+b) Raise an Error
+c) -1 ==
+d) 3
+
+Câu hỏi 9:(code) Hãy hoàn thành chương trình tìm phần tử có giá trị lớn nhất trong một list dưới
+đây. Đầu ra của chương trình là gì?
+    1 def my_function ( n ) :
+    2 # Your code here
+    3
+    4 my_list = [1001 , 9 , 100 , 0]
+    5 assert my_function ( my_list ) == 1001
+    6
+    7 my_list = [1 , 9 , 9 , 0]
+    8 print ( my_function ( my_list ) )
+a) None
+b) Raise an Error
+c) 0
+d) 9 ==
+
+
+Câu hỏi 10:(code) Hãy hoàn thành chương trình dưới đây. Đầu ra của chương trình là gì?
+    1 def My_function ( integers , number = 1) :
+    2 return any(# Your code here : Thuc hien duyet tung phan tu trong integers , so sanh
+    tung phan tu voi number , neu bang nhau tra ve True , khac nhau tra ve false
+    3 #vi du: integers = [1 , 2 , 3] , number = 2 , ban se tao ra list [False ,
+    True , False ] )
+    4
+    5 my_list = [1 , 3 , 9 , 4]
+    6 assert My_function ( my_list , -1) == False
+    7
+    8 my_list = [1 , 2 , 3 , 4]
+    9 print ( My_function ( my_list , 2) )
+a) 1
+b) 4
+c) True ==
+d) False
+
+Câu hỏi 11:(code) Hãy hoàn thành chương trình dưới đây. Đầu ra của chương trình là gì?
+    1 def my_function ( list_nums = [0 , 1 , 2]) :
+    2 var = 0
+    3 for i in list_nums :
+    4 var += i
+    5 return # Your code here : Tra ve gia tri trung binh cua list bang cach chia var cho
+    so luong phan tu trong list_mums
+    6
+    7 assert my_function ([4 , 6 , 8]) == 6
+    8 print ( my_function () )
+a) 1.0 ==
+b) 2.0
+c) Raise an Error
+d) A and C
+
+Câu hỏi 12:(code) Hãy hoàn thành chương trình dưới đây. Đầu ra của chương trình dưới đây là gì?
+    1 def my_function ( data ) :
+    2 var = []
+    3 for i in data :
+    4 # Your code here
+    5 # Neu i chia het cho 3 thi them i vao list var
+    6 return var
+    7
+    8 assert my_function ([3 , 9 , 4 , 5]) == [3 , 9]
+    9 print ( my_function ([1 , 2 , 3 , 5 , 6]) )
+a) [3, 6] ==
+b) [1, 2, 3, 5, 6]
+c) a and d
+d) [5, 1]
+
+
+Câu hỏi 13:(code) Hãy hoàn thành chương trình sau đây thực hiện tính giai thừa của 1 số. Đầu ra
+của chương trình dưới đây là gì?
+    1 def my_function ( y ) :
+    2 var = 1
+    3 while ( y > 1) :
+    4 # Your code here
+    5 return var
+    6 assert my_function (8) == 40320
+    7 print ( my_function (4) )
+a) 0
+b) 20
+c) 24 ==
+d) Raise an Error
+
+
+Câu hỏi 14:(code) Hãy hoàn thành chương trình đảo ngược chuỗi dưới đây. Đầu ra của chương trình
+là gì?
+    1 def my_function ( x ) :
+    2 # your code here
+    3
+    4 x = ’I can do it ’
+    5 assert my_function (x ) =="ti od nac I"
+    6
+    7 x = ’apricot ’
+    8 print ( my_function ( x ) )
+a) apricot
+b) tocirpa ==
+c) Raise a Error
+d) None
+
+
+Câu hỏi 15:(code) Hãy hoàn thành chương trình dưới đây. Đầu ra của chương trình là gì?
+    1 def function_helper ( x ) :
+    2 # Your code here
+    3 # Neu x >0 tra ve ’T ’, nguoc lai tra ve ’N’
+    4
+    5 def my_function ( data ) :
+    6 res = [ function_helper ( x ) for x in data ]
+    7 return res
+    8
+    9 data = [10 , 0 , -10 , -1]
+    10 assert my_function ( data ) == [’T’, ’N’, ’N’, ’N’]
+    11
+    12 data = [2 , 3 , 5 , -1]
+    13 print ( my_function ( data ) )
+a) [’N’, ’T’, ’T’, ’N’]
+b) [’T’, ’N’, ’T’, ’N’]
+c) [’T’, ’T’, ’T’, ’N’] ==
+d) Raise an Error
+
+
+Câu hỏi 16:(code) Hãy hoàn thành chương trình dưới đây để loại bỏ những phần tử trùng nhau. Đầu
+ra của chương trình là gì?
+    1 def function_helper (x , data ) :
+    2 for i in data :
+    3 # Your code here
+    4 # Neu x == i thi return 0
+    5 return 1
+    6
+    7 def my_function ( data ) :
+    8 res = []
+    9 for i in data :
+    10 if function_helper (i , res ) :
+    11 res . append ( i )
+    12
+    13 return res
+    14
+    15 lst = [10 , 10 , 9 , 7 , 7]
+    16 assert my_function ( lst ) ==[10 , 9 , 7]
+    17
+    18 lst = [9 , 9 , 8 , 1 , 1]
+    19 print ( my_function ( lst ) )
+a) [9, 8, 1] ==
+b) [1, 1, 1]
+c) [9, 9, 8, 1, 1]
+d) Raise an Error
