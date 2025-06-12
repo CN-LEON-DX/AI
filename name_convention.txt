@@ -1,0 +1,21 @@
+variable, func
+module, package
+
+ = snake_case
+        ex: customer_age, total_items ...
+
+class = CapWords
+
+const = UPPER_CASE_WITH_UNDERSCORES
+        ex: DATABASE_URL = "postgresql://user:password@localhost/dbname"
+
+---------------------------
+
+func in object
+
+public -> prefix with: public_...
+
+protect -> prefix with: _protect_...
+
+private -> prefix with: __private_...
+
