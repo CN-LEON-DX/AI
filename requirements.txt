@@ -1,15 +1,15 @@
-streamlit==1.36.0
-langchain==0.1.20
-transformers==4.40.0
+streamlit
+langchain
+transformers
 
-langchain-hub==0.1.15
-langchain-chroma==0.1.8
-langchain-experimental==0.0.61
-langchain-community==0.0.38
-langchain-huggingface==0.0.3
+langchain-hub
+langchain-chroma
+langchain-experimental
+langchain-community
+langchain-huggingface
 
 pypdf
-python-dotenv==1.0.0
+python-dotenv
 
 chromadb
 
