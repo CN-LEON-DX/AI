@@ -1,0 +1,11 @@
+pip install transformers==4.40.0
+pip install langchain==0.1.20
+pip install langchainhub==0.1.15
+pip install langchain-chroma==0.1.8
+pip install langchain_experimental==0.0.61
+pip install langchain-community==0.0.38
+pip install langchain_huggingface==0.0.3
+pip install python-dotenv==1.0.0
+pip install pypdf
+pip install streamlit==1.36.0
+pip install langchain-chroma
