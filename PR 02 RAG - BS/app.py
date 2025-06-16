@@ -1,3 +1,7 @@
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import streamlit as st
 import tempfile
 import os
@@ -11,7 +15,6 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, AutoModelForSeq2SeqLM
-
 
 @st.cache_resource
 def load_embeddings():
@@ -41,19 +44,23 @@ def load_llm_pipeline():
     return HuggingFacePipeline(pipeline=pipe)
 
 
+# --- PDF PROCESSING ---
 
 def process_pdf(uploaded_file):
     """
     Processes the uploaded PDF file, creates a RAG chain, and returns it.
     """
+    # Create a temporary file to store the uploaded PDF
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
         tmp_file.write(uploaded_file.getvalue())
         tmp_file_path = tmp_file.name
 
     try:
+        # Load the PDF content
         loader = PyPDFLoader(tmp_file_path)
         documents = loader.load()
 
+        # Split documents into semantic chunks
         semantic_splitter = SemanticChunker(
             embeddings=st.session_state.embeddings,
             breakpoint_threshold_type="percentile",
@@ -62,13 +69,16 @@ def process_pdf(uploaded_file):
         )
         docs = semantic_splitter.split_documents(documents)
 
+        # Create a Chroma vector store from the chunks
         vector_db = Chroma.from_documents(
             documents=docs, 
             embedding=st.session_state.embeddings
         )
 
+        # Create a retriever
         retriever = vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
+        # Define the prompt template for the RAG chain
         template = """
         Use the following pieces of context to answer the question at the end.
         If you don't know the answer, just say that you don't know, don't try to make up an answer.
@@ -82,9 +92,11 @@ def process_pdf(uploaded_file):
         
         prompt = PromptTemplate.from_template(template)
 
+        # Helper function to format documents
         def format_docs(docs):
             return "\n\n".join(doc.page_content for doc in docs)
 
+        # Create the RAG chain using LangChain Expression Language (LCEL)
         rag_chain = (
             {"context": retriever | format_docs, "question": RunnablePassthrough()}
             | prompt
@@ -93,15 +105,18 @@ def process_pdf(uploaded_file):
         )
 
     finally:
+        # Clean up the temporary file
         os.unlink(tmp_file_path)
 
     return rag_chain, len(docs)
 
 
+# --- MAIN APP LOGIC ---
 
 def main():
     """Main function to run the Streamlit app."""
     
+    # --- PAGE CONFIGURATION ---
     st.set_page_config(page_title="PDF RAG Assistant", layout="wide")
     st.title("📄 PDF RAG Assistant")
 
@@ -115,6 +130,7 @@ def main():
     ---
     """)
 
+    # --- SESSION STATE INITIALIZATION ---
     if "models_loaded" not in st.session_state:
         st.session_state.models_loaded = False
     if "rag_chain" not in st.session_state:
@@ -124,6 +140,7 @@ def main():
     if "llm" not in st.session_state:
         st.session_state.llm = None
         
+    # --- MODEL LOADING UI ---
     if not st.session_state.models_loaded:
         with st.spinner("Loading models... This may take a moment."):
             st.session_state.embeddings = load_embeddings()
@@ -131,6 +148,7 @@ def main():
             st.session_state.models_loaded = True
         st.success("✅ Models loaded successfully!")
 
+    # --- FILE UPLOAD AND PROCESSING UI ---
     uploaded_file = st.file_uploader("Upload your PDF file", type='pdf')
 
     if uploaded_file:
@@ -140,6 +158,7 @@ def main():
                 st.success(f'✅ PDF processed successfully! Created {num_chunks} chunks.')
                 st.info("You can now ask questions about the document below.")
 
+    # --- QUESTION & ANSWER UI ---
     if st.session_state.rag_chain:
         question = st.text_input(
             "Ask a question about the PDF:",
