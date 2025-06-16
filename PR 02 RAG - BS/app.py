@@ -1,148 +1,156 @@
 import streamlit as st
 import tempfile
-import os 
+import os
 import torch
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from langchain_experimental.text_splitter import SemanticChunker
 from langchain_chroma import Chroma
 from langchain_huggingface.llms import HuggingFacePipeline
-from langchain import hub
-
-from langchain_core.output_parsers import  StrOutputParser
+from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, pipeline, AutoModelForSeq2SeqLM
 
-# Embedding model
+
 @st.cache_resource
 def load_embeddings():
+    """Loads the sentence-transformer embeddings model."""
     return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-
 @st.cache_resource
-def load_llm():
-    MODEL_NAME = "lmsys/vicuna-7b-v1.5"
-    model = AutoModelForCausalLM.from_pretrained(
-        MODEL_NAME,
-        torch_dtype = torch.bfloat16, 
-        low_cpu_mem_usage = True
+def load_llm_pipeline():
+    """
+    Loads a local LLM using HuggingFacePipeline.
+    This function is configured to run a model locally, which aligns with your
+    dependencies (torch, transformers). It's generally faster for deployed apps
+    and avoids API key dependencies.
+    """
+    model_id = "google/flan-t5-base"
+    
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    model = AutoModelForSeq2SeqLM.from_pretrained(model_id)
+
+    pipe = pipeline(
+        "text2text-generation", 
+        model=model, 
+        tokenizer=tokenizer, 
+        max_length=512
     )
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-    model_pipline = pipeline(
-        "text-generation",
-        model=model,
-        tokenizer=tokenizer,
-        max_new_tokens=512,
-        pad_token_id = tokenizer.eos_token_id,
-        device_map = 'auto'
-    )
 
-    return HuggingFacePipeline(pipeline=model_pipline)
+    return HuggingFacePipeline(pipeline=pipe)
 
 
 
-
-# func for pdf
 def process_pdf(uploaded_file):
+    """
+    Processes the uploaded PDF file, creates a RAG chain, and returns it.
+    """
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
         tmp_file.write(uploaded_file.getvalue())
         tmp_file_path = tmp_file.name
 
-    # save file temp
+    try:
+        loader = PyPDFLoader(tmp_file_path)
+        documents = loader.load()
 
-    # read file 
-    loader = PyPDFLoader(tmp_file_path)
-    documents = loader.load()
+        semantic_splitter = SemanticChunker(
+            embeddings=st.session_state.embeddings,
+            breakpoint_threshold_type="percentile",
+            min_chunk_size=200, 
+            add_start_index=True
+        )
+        docs = semantic_splitter.split_documents(documents)
 
-    # semantic chunking
-    semantic_splitter = SemanticChunker(
-        embeddings=st.session_state.embeddings,
-        buffer_size=  1, 
-        breakpoint_threshold_type="percentile",
-        breakpoint_threshold_amount=95,
-        min_size_chunk = 500,
-        add_start_index=True
-    )
+        vector_db = Chroma.from_documents(
+            documents=docs, 
+            embedding=st.session_state.embeddings
+        )
 
+        retriever = vector_db.as_retriever(search_type="similarity", search_kwargs={"k": 3})
 
-    docs = semantic_splitter.split_documents(documents)
-    vector_db = Chroma.from_documents(documents=docs, embedding=st.session_state.embeddings)
+        template = """
+        Use the following pieces of context to answer the question at the end.
+        If you don't know the answer, just say that you don't know, don't try to make up an answer.
+        Keep the answer concise.
 
-    retriever = vector_db.as_retriever() # get db in this doc for searching !
+        Context: {context}
 
-    prompt = hub.pull("rlm/rag-prompt") # a sample prompt like: Base on context: {context}
-    # and answer this question: {question}
+        Question: {question}
 
-    def format_docs(docs):
-        return "\n\n".join(doc.page_content for doc in docs)
-    
-    rag_chain = (
-        {"context":retriever | format_docs, "question": RunnablePassthrough()}
-        | prompt
-        | st.session_state.llm
-        | StrOutputParser()
-    )
+        Helpful Answer:"""
+        
+        prompt = PromptTemplate.from_template(template)
 
-    os.unlink(tmp_file_path) # clean temp file after run
+        def format_docs(docs):
+            return "\n\n".join(doc.page_content for doc in docs)
+
+        rag_chain = (
+            {"context": retriever | format_docs, "question": RunnablePassthrough()}
+            | prompt
+            | st.session_state.llm
+            | StrOutputParser()
+        )
+
+    finally:
+        os.unlink(tmp_file_path)
 
     return rag_chain, len(docs)
 
 
 
+def main():
+    """Main function to run the Streamlit app."""
+    
+    st.set_page_config(page_title="PDF RAG Assistant", layout="wide")
+    st.title("📄 PDF RAG Assistant")
 
+    st.markdown("""
+    **Chat with any PDF document!**
 
-if __name__  == "__main__":
-    if "rag_chain" not in st.session_state:
-        st.session_state.rag_chain = None
+    **How to use:**
+    1.  Models will load automatically below.
+    2.  **Upload a PDF file** and click the "Process PDF" button.
+    3.  **Ask any question** about the document in the text box.
+    ---
+    """)
+
     if "models_loaded" not in st.session_state:
         st.session_state.models_loaded = False
+    if "rag_chain" not in st.session_state:
+        st.session_state.rag_chain = None
     if "embeddings" not in st.session_state:
         st.session_state.embeddings = None
     if "llm" not in st.session_state:
         st.session_state.llm = None
-
-    # buid UI
-    st.set_page_config(page_title="PDF RAG Assistant", layout="wide")
-    st.title("PDF RAG Assistant")
-
-    st.markdown("""
-    **AI Application helps you can chat with PDF file**
-    **How to use ? ** 
-    1. **Upload file PDF** Upload your file then press Process
-    2. **Ask any question** Ask
-    --- 
-    """)
-
-    #load model
-
-    if not st.session_state.models_loaded:
-        st.info("Loading models ...")
-        st.session_state.embeddings = load_embeddings()
-
-        st.session_state.llm = load_llm()
-        st.session_state.model_loaded = True
-        st.success("Models ready ")
-
-
-    # upload file and process file pdf
-    uploaded_file = st.file_uploader("Upload file PDF", type ='pdf')
-    if uploaded_file and st.button("Process file PDF"):
-        with st.spinner("Processing"):
-            st.session_state.rag_chain, num_chunks = process_pdf(uploaded_file)
-
-            st.success(f'Complete ! {num_chunks} chunks')
         
+    if not st.session_state.models_loaded:
+        with st.spinner("Loading models... This may take a moment."):
+            st.session_state.embeddings = load_embeddings()
+            st.session_state.llm = load_llm_pipeline()
+            st.session_state.models_loaded = True
+        st.success("✅ Models loaded successfully!")
 
-    # UI QA
+    uploaded_file = st.file_uploader("Upload your PDF file", type='pdf')
+
+    if uploaded_file:
+        if st.button("Process PDF"):
+            with st.spinner("Processing PDF... Creating chunks and vector store."):
+                st.session_state.rag_chain, num_chunks = process_pdf(uploaded_file)
+                st.success(f'✅ PDF processed successfully! Created {num_chunks} chunks.')
+                st.info("You can now ask questions about the document below.")
+
     if st.session_state.rag_chain:
-        question = st.text_input("Question:")
+        question = st.text_input(
+            "Ask a question about the PDF:",
+            placeholder="What is the main topic of this document?"
+        )
 
         if question:
-            with st.spinner("Replying"):
+            with st.spinner("Thinking..."):
                 output = st.session_state.rag_chain.invoke(question)
-                answer = output.split("Answer:")[1].strip() if "Anwser:" in output else output.strip()
-            
-                st.write("**Answer: **")
-                st.write(answer)
+                st.write("#### Answer:")
+                st.write(output)
 
-        
+if __name__ == "__main__":
+    main()
